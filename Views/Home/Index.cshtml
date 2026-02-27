@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Library Dashboard";
+}
+
+<style>
+    body {
+        background-color: #eef2f7;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: repeat(2, 220px);
+        grid-template-rows: repeat(2, 220px);
+        grid-gap: 40px;
+        justify-content: center;
+        align-content: center;
+        height: 80vh;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(135deg, #0d3b66, #1a5276);
+        color: #fff;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-decoration: none;
+        font-size: 1.3rem;
+        font-weight: 700;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .dashboard-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 16px 30px rgba(0,0,0,0.35);
+            background: linear-gradient(135deg, #144d86, #1f5c9c);
+        }
+</style>
+
+<main>
+    <div class="dashboard-container">
+        <a href="@Url.Action("Index", "Books")" class="dashboard-card">
+            <i class="fas fa-book"></i>
+            Books
+        </a>
+        <a href="@Url.Action("Index", "Authors")" class="dashboard-card">
+            <i class="fas fa-user"></i>
+            Authors
+        </a>
+        <a href="@Url.Action("Index", "Reservations")" class="dashboard-card">
+            <i class="fas fa-calendar-check"></i>
+            Reservations
+        </a>
+        <a href="@Url.Action("Index", "Loans")" class="dashboard-card">
+            <i class="fas fa-hand-holding"></i>
+            Loans
+        </a>
+    </div>
+</main>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

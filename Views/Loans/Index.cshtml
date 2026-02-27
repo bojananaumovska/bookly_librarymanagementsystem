@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Library_Managment_Project.Models.Loan>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Loans</h2>
+<p style="
+    color: #1E90FF;
+    background-color: #E6F2FF;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1.1em;
+">
+    Librarians are responsible for creating and managing book loans, including issuing and closing loan records. Users can access this page to view all of their current and previous loans.
+</p>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+<table id="loansTable" class="table table-striped table-hover" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookCopy.InventoryNumber)
+            </th>
+            <th>
+                Book Title
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoanDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DueDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookCopy.InventoryNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookCopy.Book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoanDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReturnDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                        <text> | </text>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        <text> | </text>
+                    }
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#loansTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                pageLength: 12,
+                responsive: true
+            });
+        });
+    </script>
+}

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Library_Managment_Project.Models.ApplicationUser>
+
+<h2>All Users</h2>
+
+<table class="table">
+    <tr>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Email</td>
+            <td>
+                @using (Html.BeginForm("MakeLibrarian", "Admin", FormMethod.Post))
+                {
+                    @Html.Hidden("userId", user.Id)
+                    <button type="submit" class="btn btn-primary">
+                        Make Librarian
+                    </button>
+                }
+            </td>
+        </tr>
+    }
+</table>
