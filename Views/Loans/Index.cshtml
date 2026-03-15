@@ -52,39 +52,39 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BookCopy.InventoryNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BookCopy.Book.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LoanDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DueDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReturnDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
-                    {
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                        <text> | </text>
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                        <text> | </text>
-                    }
-                    @Html.ActionLink("Details", "Details", new { id = item.Id })
-                </td>
-            </tr>
+  <tr class="@(item.Status == Library_Managment_Project.Models.Loan.LoanStatus.Overdue ? "table-danger" : "")">
+    <td>
+        @Html.DisplayFor(modelItem => item.BookCopy.InventoryNumber)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.BookCopy.Book.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.User.FirstName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.LoanDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.DueDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReturnDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Status)
+    </td>
+    <td>
+        @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+            <text> | </text>
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            <text> | </text>
+        }
+        @Html.ActionLink("Details", "Details", new { id = item.Id })
+    </td>
+</tr>
         }
     </tbody>
 

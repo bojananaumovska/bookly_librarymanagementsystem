@@ -18,18 +18,29 @@ namespace Library_Managment_Project.Controllers
         // GET: Loans
         public ActionResult Index()
         {
-            var loansQuery = db.Loans
+            var loans = db.Loans
                 .Include(l => l.BookCopy)
                 .Include(l => l.BookCopy.Book)
-                .Include(l => l.User);
+                .Include(l => l.User)
+                .ToList();
+
+            foreach (var loan in loans)
+            {
+                if (loan.Status == Loan.LoanStatus.Active && loan.DueDate < DateTime.Now)
+                {
+                    loan.Status = Loan.LoanStatus.Overdue;
+                }
+            }
+
+            db.SaveChanges();
 
             if (!User.IsInRole("Admin") && !User.IsInRole("Librarian"))
             {
                 var currentUserId = User.Identity.GetUserId();
-                loansQuery = loansQuery.Where(l => l.UserId == currentUserId);
+                loans = loans.Where(l => l.UserId == currentUserId).ToList();
             }
 
-            return View(loansQuery.ToList());
+            return View(loans);
         }
 
         // GET: Loans/Details/5
@@ -51,9 +62,13 @@ namespace Library_Managment_Project.Controllers
         [Authorize(Roles = "Admin,Librarian")]
         public ActionResult Create()
         {
-            var bookCopies = db.BookCopies.Include(bc => bc.Book).ToList();
+            var availableBookCopies = db.BookCopies
+                                        .Include(bc => bc.Book)
+                                        .Where(bc => !bc.Loans.Any(l => l.Status != Loan.LoanStatus.Returned))
+                                        .ToList();
+
             ViewBag.BookCopyId = new SelectList(
-                bookCopies.Select(bc => new {
+                availableBookCopies.Select(bc => new {
                     Id = bc.Id,
                     Display = $"{bc.InventoryNumber} - {bc.Book.Title}"
                 }),
@@ -81,15 +96,6 @@ namespace Library_Managment_Project.Controllers
             {
                 ModelState.AddModelError("", "Book copy not found.");
             }
-            else
-            {
-                // Дали веќе е позајмена
-                bool isLoaned = bookCopy.Loans.Any(l => l.Status == Loan.LoanStatus.Active);
-                if (isLoaned)
-                {
-                    ModelState.AddModelError("", "This copy is already loaned.");
-                }
-            }
 
             if (ModelState.IsValid)
             {
@@ -99,7 +105,21 @@ namespace Library_Managment_Project.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BookCopyId = new SelectList(db.BookCopies, "Id", "InventoryNumber", loan.BookCopyId);
+            var availableBookCopies = db.BookCopies
+                                        .Include(bc => bc.Book)
+                                        .Where(bc => !bc.Loans.Any(l => l.Status != Loan.LoanStatus.Returned))
+                                        .ToList();
+
+            ViewBag.BookCopyId = new SelectList(
+                availableBookCopies.Select(bc => new {
+                    Id = bc.Id,
+                    Display = $"{bc.InventoryNumber} - {bc.Book.Title}"
+                }),
+                "Id",
+                "Display",
+                loan.BookCopyId
+            );
+
             ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", loan.UserId);
             return View(loan);
         }
@@ -111,11 +131,21 @@ namespace Library_Managment_Project.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Loan loan = db.Loans.Find(id);
+            Loan loan = db.Loans
+                          .Include(l => l.BookCopy)
+                          .Include(l => l.BookCopy.Book)
+                          .FirstOrDefault(l => l.Id == id);
+
             if (loan == null)
                 return HttpNotFound();
 
-            var bookCopies = db.BookCopies.Include(bc => bc.Book).ToList();
+            // Only show copies that are available OR the one currently assigned to this loan
+            var bookCopies = db.BookCopies
+                               .Include(bc => bc.Book)
+                               .Where(bc => !bc.Loans.Any(l => l.Status != Loan.LoanStatus.Returned)
+                                            || bc.Id == loan.BookCopyId)
+                               .ToList();
+
             ViewBag.BookCopyId = new SelectList(
                 bookCopies.Select(bc => new {
                     Id = bc.Id,
@@ -127,6 +157,8 @@ namespace Library_Managment_Project.Controllers
             );
 
             ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", loan.UserId);
+
+            // The loan object already has the dates (LoanDate, DueDate, ReturnDate) pre-filled
             return View(loan);
         }
 
