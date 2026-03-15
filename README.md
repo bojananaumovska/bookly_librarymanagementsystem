@@ -13,23 +13,14 @@
 
 ## 📸 Application Screenshots
 
-**Books**  
-![Books](Content/Images/Screenshots/books.png)
-
-**Authors**  
-![Authors](Content/Images/Screenshots/authors.png)
-
-**Book Copies**  
-![Book Copies](Content/Images/Screenshots/book_copies.png)
-
-**Categories**  
-![Categories](Content/Images/Screenshots/category.png)
-
-**Loans**  
-![Loans](Content/Images/Screenshots/loans.png)
-
-**Reservations**  
-![Reservations](Content/Images/Screenshots/reservations.png)
+| Feature        | Screenshot |
+|----------------|------------|
+| Books          | ![Books](Content/Images/Screenshots/books.png) |
+| Authors        | ![Authors](Content/Images/Screenshots/authors.png) |
+| Book Copies    | ![Book Copies](Content/Images/Screenshots/book_copies.png) |
+| Categories     | ![Categories](Content/Images/Screenshots/category.png) |
+| Loans          | ![Loans](Content/Images/Screenshots/loans.png) |
+| Reservations   | ![Reservations](Content/Images/Screenshots/reservations.png) |
 
 ---
 
