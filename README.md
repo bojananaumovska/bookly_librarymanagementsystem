@@ -27,6 +27,9 @@
 ## 🗄 Database Architecture
 
 ### ER Diagram
+
+![Database ER Diagram](Content/Images/DataBase/LibraryManagmentSystem.drawio.png)
+
 The database is generated using Entity Framework Code-First and integrates ASP.NET Identity tables with domain entities.
 
 **Key Relationships:**
